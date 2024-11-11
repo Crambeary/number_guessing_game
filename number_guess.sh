@@ -32,6 +32,7 @@ fi
 RANDOM_NUMBER=$(var=1000 && shuf -i 1-${var} -n 1)
 
 TRIES=0
+GAME_WON=FALSE
 
 GUESS_NUMBER() {
   TRIES=$(($TRIES+1))
@@ -58,18 +59,7 @@ GUESS_NUMBER() {
 
   if [[ $GUESS -eq $RANDOM_NUMBER ]]; then
     # ---Win---
-    echo "You guessed it in $TRIES tries. The secret number was $RANDOM_NUMBER. Nice job!"
-    USERNAME_EXISTS=$($PSQL "SELECT username, games_played, best_game FROM number_guess WHERE username='$USERNAME'")
-    echo "$USERNAME_EXISTS" | while read NAME BAR GAMES_PLAYED BAR BEST_GAME
-    do
-      # echo $BEST_GAME
-      INSERT_WIN=$($PSQL "UPDATE number_guess SET games_played=$(($GAMES_PLAYED+1)) WHERE username='$NAME'")
-      # echo $INSERT_WIN
-      if [[ $TRIES -lt $BEST_GAME || $BEST_GAME -eq 0 ]]; then
-        INSERT_BEST=$($PSQL "UPDATE number_guess SET best_game=$TRIES WHERE username='$NAME'")
-        # echo $INSERT_BEST
-      fi
-    done
+    GAME_WIN=TRUE
   fi  
 }
 
@@ -77,3 +67,15 @@ GUESS_NUMBER() {
 echo "Guess the secret number between 1 and 1000:"
 GUESS_NUMBER
 
+USERNAME_EXISTS=$($PSQL "SELECT username, games_played, best_game FROM number_guess WHERE username='$USERNAME'")
+echo "$USERNAME_EXISTS" | while read NAME BAR GAMES_PLAYED BAR BEST_GAME
+do
+  GAMES_PLAYED=$(($GAMES_PLAYED+1))
+  echo "You guessed it in $TRIES tries. The secret number was $RANDOM_NUMBER. Nice job!"
+  INSERT_WIN=$($PSQL "UPDATE number_guess SET games_played=$GAMES_PLAYED WHERE username='$USERNAME'")
+  # echo $INSERT_WIN
+  if [[ $TRIES -lt $BEST_GAME || $BEST_GAME -eq 0 ]]; then
+    INSERT_BEST=$($PSQL "UPDATE number_guess SET best_game=$TRIES WHERE username='$USERNAME'")
+    # echo $INSERT_BEST
+  fi
+done
