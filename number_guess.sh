@@ -1,28 +1,31 @@
 #!/bin/bash
 
-# Database needs
-# username VARCHAR(22)
-# games_played INT - total number of games played
-# best_game INT - fewest number of guesses to win
-
-
-PSQL="psql --username=freecodecamp --dbname=<database_name> -t --no-align -c"
+PSQL="psql --username=freecodecamp --dbname=number_guess -t -c"
 
 # Ask for username
 echo "Enter your username:"
 read USERNAME
 
-# Detect that it's 22 characters or less
-
 # Detect if it exists
+USERNAME_EXISTS=$($PSQL "SELECT username, games_played, best_game FROM number_guess WHERE username='$USERNAME'")
+if [[ -z $USERNAME_EXISTS ]]; then
+  # If it doesn't exist, create it in the DB
+  INSERT_INTO=$($PSQL "INSERT INTO number_guess(username, games_played, best_game) VALUES('$USERNAME', 0, 0)")
+  if [[ ! -z $INSERT_NAME ]]; then
+    echo "Error adding new user, make sure your username is 22 or less characters"
+    echo $INSERT_NAME
+  fi
+  # Welcome if it is newly created
+  echo "Welcome, $(echo $USERNAME)! It looks like this is your first time here."
+else
+  echo "$USERNAME_EXISTS" | while read NAME BAR GAMES_PLAYED BAR BEST_GAME
+  do
+  # Welcome back to game if it exists with info
+    echo "Welcome back, $(echo $NAME)! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
+  done
+fi
 
-# Welcome back to game if it exists with info
-echo "Welcome back, <username>! You have played <games_played> games, and your best game took <best_game> guesses."
 
-# If it doesn't exist, create it in the DB
-
-# Welcome if it is newly created
-echo "Welcome, $(echo $USERNAME)! It looks like this is your first time here."
 
 # ---Game---
 # Welcome player
