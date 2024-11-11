@@ -39,6 +39,82 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: number_guess; Type: TABLE; Schema: public; Owner: freecodecamp
+--
+
+CREATE TABLE public.number_guess (
+    number_guesser_id integer NOT NULL,
+    username character varying(22) NOT NULL,
+    games_played integer,
+    best_game integer
+);
+
+
+ALTER TABLE public.number_guess OWNER TO freecodecamp;
+
+--
+-- Name: number_guesser_number_guesser_id_seq; Type: SEQUENCE; Schema: public; Owner: freecodecamp
+--
+
+CREATE SEQUENCE public.number_guesser_number_guesser_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.number_guesser_number_guesser_id_seq OWNER TO freecodecamp;
+
+--
+-- Name: number_guesser_number_guesser_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: freecodecamp
+--
+
+ALTER SEQUENCE public.number_guesser_number_guesser_id_seq OWNED BY public.number_guess.number_guesser_id;
+
+
+--
+-- Name: number_guess number_guesser_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.number_guess ALTER COLUMN number_guesser_id SET DEFAULT nextval('public.number_guesser_number_guesser_id_seq'::regclass);
+
+
+--
+-- Data for Name: number_guess; Type: TABLE DATA; Schema: public; Owner: freecodecamp
+--
+
+
+
+--
+-- Name: number_guesser_number_guesser_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
+--
+
+SELECT pg_catalog.setval('public.number_guesser_number_guesser_id_seq', 1, false);
+
+
+--
+-- Name: number_guess number_guesser_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.number_guess
+    ADD CONSTRAINT number_guesser_pkey PRIMARY KEY (number_guesser_id);
+
+
+--
+-- Name: number_guess number_guesser_username_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.number_guess
+    ADD CONSTRAINT number_guesser_username_key UNIQUE (username);
+
+
 --
 -- PostgreSQL database dump complete
 --

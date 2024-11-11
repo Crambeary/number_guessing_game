@@ -26,23 +26,53 @@ else
 fi
 
 
-
 # ---Game---
+# Create a random number for the game between 1 and 1000 inclusively
+# Using shuf instead of $RANDOM since it appears to be even in the randomness
+RANDOM_NUMBER=$(var=1000 && shuf -i 1-${var} -n 1)
+
+TRIES=0
+
+GUESS_NUMBER() {
+  TRIES=$(($TRIES+1))
+  read GUESS
+  
+  if [[ ! $GUESS =~ ^[0-9]+$ ]]; then
+    # Error if not a number/int
+    echo "That is not an integer, guess again:"
+    GUESS_NUMBER
+  fi
+  
+  # Detect guess is lower or higher than secret_number
+  if [[ $GUESS -gt $RANDOM_NUMBER ]]; then
+    # if lower
+    echo "It's lower than that, guess again:"
+    GUESS_NUMBER
+  fi  
+
+  if [[ $GUESS -lt $RANDOM_NUMBER ]]; then
+    # if higher
+    echo "It's higher than that, guess again:"
+    GUESS_NUMBER
+  fi
+
+  if [[ $GUESS -eq $RANDOM_NUMBER ]]; then
+    # ---Win---
+    echo "You guessed it in $TRIES tries. The secret number was $RANDOM_NUMBER. Nice job!"
+    USERNAME_EXISTS=$($PSQL "SELECT username, games_played, best_game FROM number_guess WHERE username='$USERNAME'")
+    echo "$USERNAME_EXISTS" | while read NAME BAR GAMES_PLAYED BAR BEST_GAME
+    do
+      INSERT_WIN=$($PSQL "UPDATE number_guess SET games_played=$((GAMES_PLAYED+1)) WHERE username='$NAME'")
+      echo $INSERT_WIN
+      if [[ $TRIES -lt $BEST_GAME ]]; then
+        INSERT_BEST=$($PSQL "UPDATE number_guess SET best_game=$TRIES WHERE username='$NAME'")
+        echo $INSERT_BEST
+      fi
+    done
+  fi  
+}
+
 # Welcome player
 echo "Guess the secret number between 1 and 1000:"
-read GUESS
+GUESS_NUMBER
 
-# Error if not a number/int
-echo "That is not an integer, guess again:"
-
-# --loop--
-# Detect guess is lower or higher than secret_number
-# if lower
-echo "It's lower than that, guess again:"
-
-# if higher
-echo "It's higher than that, guess again:"
-
-
-# ---Win---
-echo "You guessed it in <number_of_guesses> tries. The secret number was <secret_number>. Nice job!"
