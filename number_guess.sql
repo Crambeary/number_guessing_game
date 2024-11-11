@@ -90,13 +90,20 @@ ALTER TABLE ONLY public.number_guess ALTER COLUMN number_guesser_id SET DEFAULT 
 -- Data for Name: number_guess; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
+INSERT INTO public.number_guess VALUES (21, 'Marc', 2, 9);
+INSERT INTO public.number_guess VALUES (25, 'user_1731358221938', 2, 133);
+INSERT INTO public.number_guess VALUES (24, 'user_1731358221939', 5, 50);
+INSERT INTO public.number_guess VALUES (27, 'user_1731358239432', 2, 142);
+INSERT INTO public.number_guess VALUES (26, 'user_1731358239433', 5, 24);
+INSERT INTO public.number_guess VALUES (23, 'user_1731357945537', 1, 757);
+INSERT INTO public.number_guess VALUES (22, 'user_1731357945538', 1, 759);
 
 
 --
 -- Name: number_guesser_number_guesser_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
-SELECT pg_catalog.setval('public.number_guesser_number_guesser_id_seq', 1, false);
+SELECT pg_catalog.setval('public.number_guesser_number_guesser_id_seq', 27, true);
 
 
 --
