@@ -62,12 +62,12 @@ GUESS_NUMBER() {
     USERNAME_EXISTS=$($PSQL "SELECT username, games_played, best_game FROM number_guess WHERE username='$USERNAME'")
     echo "$USERNAME_EXISTS" | while read NAME BAR GAMES_PLAYED BAR BEST_GAME
     do
-      echo $BEST_GAME
-      INSERT_WIN=$($PSQL "UPDATE number_guess SET games_played=$((GAMES_PLAYED+1)) WHERE username='$NAME'")
-      echo $INSERT_WIN
+      # echo $BEST_GAME
+      INSERT_WIN=$($PSQL "UPDATE number_guess SET games_played=$(($GAMES_PLAYED+1)) WHERE username='$NAME'")
+      # echo $INSERT_WIN
       if [[ $TRIES -lt $BEST_GAME || $BEST_GAME -eq 0 ]]; then
         INSERT_BEST=$($PSQL "UPDATE number_guess SET best_game=$TRIES WHERE username='$NAME'")
-        echo $INSERT_BEST
+        # echo $INSERT_BEST
       fi
     done
   fi  
